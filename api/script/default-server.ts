@@ -15,7 +15,7 @@ import * as bodyParser from "body-parser";
 const domain = require("express-domain-middleware");
 import * as express from "express";
 import * as q from "q";
-import { RedisS3Storage } from './storage/redis-s3-storage';
+import { RedisS3Storage } from "./storage/redis-s3-storage";
 
 interface Secret {
   id: string;
@@ -37,8 +37,6 @@ function bodyParserErrorHandler(err: any, req: express.Request, res: express.Res
 
 export function start(done: (err?: any, server?: express.Express, storage?: Storage) => void, useJsonStorage?: boolean): void {
   let storage: Storage;
-  let isKeyVaultConfigured: boolean;
-  let keyvaultClient: any;
 
   q<void>(null)
     .then(async () => {
