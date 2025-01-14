@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-
 import { Router, RequestHandler } from "express";
 
 import { getHeadersMiddleware, HeadersConfig } from "./routes/headers";
