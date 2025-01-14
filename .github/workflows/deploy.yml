@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 
 env:
+  AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: bz-code-push-production
   ECS_CLUSTER: bz-code-push-production
   ECS_SERVICE: bz-code-push-production
