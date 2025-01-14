@@ -15,6 +15,7 @@ import * as bodyParser from "body-parser";
 const domain = require("express-domain-middleware");
 import * as express from "express";
 import * as q from "q";
+import { RedisS3Storage } from './storage/redis-s3-storage';
 
 interface Secret {
   id: string;
@@ -41,22 +42,7 @@ export function start(done: (err?: any, server?: express.Express, storage?: Stor
 
   q<void>(null)
     .then(async () => {
-      if (useJsonStorage) {
-        storage = new JsonStorage();
-      } else if (!process.env.AZURE_KEYVAULT_ACCOUNT) {
-        storage = new AzureStorage();
-      } else {
-        isKeyVaultConfigured = true;
-
-        const credential = new DefaultAzureCredential();
-
-        const vaultName = process.env.AZURE_KEYVAULT_ACCOUNT;
-        const url = `https://${vaultName}.vault.azure.net`;
-
-        const keyvaultClient = new SecretClient(url, credential);
-        const secret = await keyvaultClient.getSecret(`storage-${process.env.AZURE_STORAGE_ACCOUNT}`);
-        storage = new AzureStorage(process.env.AZURE_STORAGE_ACCOUNT, secret);
-      }
+      storage = new RedisS3Storage();
     })
     .then(() => {
       const app = express();
@@ -164,22 +150,6 @@ export function start(done: (err?: any, server?: express.Express, storage?: Stor
 
       // Error handler needs to be the last middleware so that it can catch all unhandled exceptions
       app.use(appInsights.errorHandler);
-
-      if (isKeyVaultConfigured) {
-        // Refresh credentials from the vault regularly as the key is rotated
-        setInterval(() => {
-          keyvaultClient
-            .getSecret(`storage-${process.env.AZURE_STORAGE_ACCOUNT}`)
-            .then((secret: any) => {
-              return (<AzureStorage>storage).reinitialize(process.env.AZURE_STORAGE_ACCOUNT, secret);
-            })
-            .catch((error: Error) => {
-              console.error("Failed to reinitialize storage from Key Vault credentials");
-              appInsights.errorHandler(error);
-            })
-            .done();
-        }, Number(process.env.REFRESH_CREDENTIALS_INTERVAL) || 24 * 60 * 60 * 1000 /*daily*/);
-      }
 
       done(null, app, storage);
     })
