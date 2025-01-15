@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.git
+.env
+.env.*
+*.log
+coverage
+__azurite_db_*
+__blobstorage__
+__queuestorage__
+*.crt
+*.pem
+*.key
+*.cnf
