@@ -1,7 +1,6 @@
 FROM node:22-alpine3.20
 WORKDIR /app
 
-ENV NODE_ENV=production
 ENV PORT=3000
 
 ARG APP_BUILD_TIME
