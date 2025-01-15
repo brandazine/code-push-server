@@ -17,7 +17,7 @@
     "url": "https://github.com/microsoft/code-push-server"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=22.0.0",
     "npm": ">=9.0.0"
   },
   "author": "Microsoft",
@@ -71,6 +71,6 @@
     "rimraf": "^5.0.1",
     "shx": "^0.3.4",
     "supertest": "^6.3.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.7.3"
   }
 }

@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:18-alpine AS builder
+FROM node:22-alpine3.20
 WORKDIR /app
 
 ENV NODE_ENV=production
